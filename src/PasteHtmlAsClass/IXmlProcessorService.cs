@@ -1,6 +1,6 @@
 ﻿namespace PasteHtmlAsClass
 {
-    public interface IXmlPreprocessingService
+    public interface IXmlProcessorService
     {
         string MatchTable(string html);
     }

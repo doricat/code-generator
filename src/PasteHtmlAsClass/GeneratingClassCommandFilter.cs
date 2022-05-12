@@ -13,14 +13,14 @@ namespace PasteHtmlAsClass
     {
         private readonly IOleCommandTarget _nextCommandTargetInChain;
         private readonly IWpfTextView _wpfTextView;
-        private readonly IXmlPreprocessingService _xmlPreprocessingService;
+        private readonly IXmlProcessorService _xmlProcessorService;
 
         public GeneratingClassCommandFilter(IVsTextView textView,
-            IWpfTextView wpfTextView, 
-            IXmlPreprocessingService xmlPreprocessingService)
+            IWpfTextView wpfTextView,
+            IXmlProcessorService xmlProcessorService)
         {
             _wpfTextView = wpfTextView;
-            _xmlPreprocessingService = xmlPreprocessingService;
+            _xmlProcessorService = xmlProcessorService;
             textView.AddCommandFilter(this, out _nextCommandTargetInChain);
         }
 
@@ -67,7 +67,7 @@ namespace PasteHtmlAsClass
                         return;
                     }
 
-                    var xml = _xmlPreprocessingService.MatchTable(html);
+                    var xml = _xmlProcessorService.MatchTable(html);
                     if (string.IsNullOrEmpty(xml))
                     {
                         return;
@@ -101,9 +101,9 @@ namespace PasteHtmlAsClass
             }
         }
 
-        public static void Register(IVsTextView textView, IWpfTextView wpfTextView, IXmlPreprocessingService xmlPreprocessingService)
+        public static void Register(IVsTextView textView, IWpfTextView wpfTextView, IXmlProcessorService xmlProcessorService)
         {
-            var _ = new GeneratingClassCommandFilter(textView, wpfTextView, xmlPreprocessingService);
+            var _ = new GeneratingClassCommandFilter(textView, wpfTextView, xmlProcessorService);
         }
     }
 }

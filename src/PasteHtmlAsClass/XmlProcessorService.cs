@@ -3,8 +3,8 @@ using System.ComponentModel.Composition;
 
 namespace PasteHtmlAsClass
 {
-    [Export(typeof(IXmlPreprocessingService))]
-    public class XmlPreprocessingService : IXmlPreprocessingService
+    [Export(typeof(IXmlProcessorService))]
+    public class XmlProcessorService : IXmlProcessorService
     {
         public string MatchTable(string html)
         {
