@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="ClipboardSupport.cs" />
     <Compile Include="CommandFilterFactory.cs" />
+    <Compile Include="DefaultColumnMapping.cs" />
+    <Compile Include="DefaultTypeMapping.cs" />
     <Compile Include="GeneratingClassCommandFilter.cs" />
     <Compile Include="GuidConstant.cs" />
     <Compile Include="ITableBuilderService.cs" />

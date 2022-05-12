@@ -31,7 +31,23 @@ namespace PasteHtmlAsClass
 
         protected Row Parse(XElement element)
         {
-            throw new NotImplementedException();
+            var index = 0;
+            var row = new Row();
+            foreach (var item in element.Elements())
+            {
+                if (index >= DefaultColumnMapping.Mapping.Count)
+                {
+                    break;
+                }
+
+                if (item.Name.LocalName.Equals("td", StringComparison.OrdinalIgnoreCase))
+                {
+                    DefaultColumnMapping.Mapping[index](row, item.Value);
+                    index++;
+                }
+            }
+
+            return string.IsNullOrEmpty(row.Identifier) ? null : row;
         }
     }
 }
