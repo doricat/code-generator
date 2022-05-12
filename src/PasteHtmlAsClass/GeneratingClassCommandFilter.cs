@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
@@ -14,13 +15,16 @@ namespace PasteHtmlAsClass
         private readonly IOleCommandTarget _nextCommandTargetInChain;
         private readonly IWpfTextView _wpfTextView;
         private readonly IXmlProcessorService _xmlProcessorService;
+        private readonly ITableBuilderService _tableBuilderService;
 
         public GeneratingClassCommandFilter(IVsTextView textView,
             IWpfTextView wpfTextView,
-            IXmlProcessorService xmlProcessorService)
+            IXmlProcessorService xmlProcessorService, 
+            ITableBuilderService tableBuilderService)
         {
             _wpfTextView = wpfTextView;
             _xmlProcessorService = xmlProcessorService;
+            _tableBuilderService = tableBuilderService;
             textView.AddCommandFilter(this, out _nextCommandTargetInChain);
         }
 
@@ -73,7 +77,13 @@ namespace PasteHtmlAsClass
                         return;
                     }
 
-                    // TODO
+                    var table = _tableBuilderService.Build(xml);
+                    if (table?.Rows.Any() == true)
+                    {
+                        var code = table.GenerateCode();
+                        var position = _wpfTextView.Selection.Start.Position.Position;
+                        _wpfTextView.TextBuffer.Insert(position, code);
+                    }
                 });
             }
 
@@ -101,9 +111,9 @@ namespace PasteHtmlAsClass
             }
         }
 
-        public static void Register(IVsTextView textView, IWpfTextView wpfTextView, IXmlProcessorService xmlProcessorService)
+        public static void Register(IVsTextView textView, IWpfTextView wpfTextView, IXmlProcessorService xmlProcessorService, ITableBuilderService tableBuilderService)
         {
-            var _ = new GeneratingClassCommandFilter(textView, wpfTextView, xmlProcessorService);
+            var _ = new GeneratingClassCommandFilter(textView, wpfTextView, xmlProcessorService, tableBuilderService);
         }
     }
 }
