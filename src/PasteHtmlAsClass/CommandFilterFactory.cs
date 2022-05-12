@@ -14,10 +14,13 @@ namespace PasteHtmlAsClass
         [Import]
         internal IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
 
+        [Import]
+        internal IXmlPreprocessingService XmlPreprocessingService { get; set; }
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            GeneratingClassCommandFilter.Register(textViewAdapter, textView);
+            GeneratingClassCommandFilter.Register(textViewAdapter, textView, XmlPreprocessingService);
         }
     }
 }
